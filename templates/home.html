@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    {% include 'navbar.html' %}
-    <h1>Index page</h1>
-</body>
-</html>
+{% extends 'main.html' %}
+{% block title %}
+    Index page
+{% endblock %}
+{% block content %}
+    <h1>Hello</h1>
+{% endblock %}
