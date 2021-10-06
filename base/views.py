@@ -12,4 +12,9 @@ def index(request):
 
 
 def room(request, pk):
-    return render(request, 'base/room.html')
+    room = None
+    for room_object in rooms:
+        if room_object['id'] == int(pk):
+            room = room_object
+    context = {'room': room}
+    return render(request, 'base/room.html', context)
