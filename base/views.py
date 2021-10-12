@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Room
+from .models import Room, Topic
 from .forms import RoomForm
 
 # rooms = [
@@ -11,7 +11,8 @@ from .forms import RoomForm
 
 def home(request):
     rooms = Room.objects.all()
-    return render(request, 'base/home.html', {'rooms': rooms})
+    topics = Topic.objects.all()
+    return render(request, 'base/home.html', {'rooms': rooms, 'topics': topics})
 
 
 def room(request, pk):
