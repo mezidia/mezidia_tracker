@@ -5,7 +5,7 @@ from fastapi import FastAPI, Body
 from fastapi.encoders import jsonable_encoder
 
 from database import Client
-from models import StudentModel
+from models import User
 
 app = FastAPI()
 
@@ -20,8 +20,8 @@ async def read_item(item_id: int, q: Optional[str] = None):
     return {"item_id": item_id, "q": q}
 
 
-@app.post("/", response_description="Add new student", response_model=StudentModel)
-async def create_student(student: StudentModel = Body(...)):
+@app.post("/", response_description="Add new student", response_model=User)
+async def create_student(student: User = Body(...)):
     student = jsonable_encoder(student)
     new_student = await client.create_document(student)
     return new_student

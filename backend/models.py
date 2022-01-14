@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from bson import ObjectId
 
 
@@ -18,12 +18,15 @@ class PyObjectId(ObjectId):
         field_schema.update(type="string")
 
 
-class StudentModel(BaseModel):
+class User(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     name: str = Field(...)
-    email: str = Field(...)
-    course: str = Field(...)
-    gpa: float = Field(..., le=4.0)
+    surname: str = Field(...)
+    email: EmailStr = Field(...)
+    github_nickname: str = Field(...)
+    gitlab_nickname: str = Field(...)
+    team: str = Field(...)
+    password: str = Field(...)
 
     class Config:
         allow_population_by_field_name = True
@@ -31,9 +34,12 @@ class StudentModel(BaseModel):
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
-                "name": "Jane Doe",
+                "name": "Jane",
+                'surname': 'Doe',
                 "email": "jdoe@example.com",
-                "course": "Experiments, Science, and Fashion in Nanophotonics",
-                "gpa": "3.0",
+                'github_nickname': 'mez',
+                'gitlab_nickname': 'mez',
+                'team': 'mezidia',
+                'password': 'hello',
             }
         }
