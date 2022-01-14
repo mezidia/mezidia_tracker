@@ -1,7 +1,11 @@
 from typing import Optional
 
-from fastapi import FastAPI
 import uvicorn
+from fastapi import FastAPI, Body
+from fastapi.encoders import jsonable_encoder
+
+from database import Client
+from models import StudentModel
 
 app = FastAPI()
 
@@ -15,6 +19,12 @@ async def read_root():
 async def read_item(item_id: int, q: Optional[str] = None):
     return {"item_id": item_id, "q": q}
 
+
+@app.post("/", response_description="Add new student", response_model=StudentModel)
+async def create_student(student: StudentModel = Body(...)):
+    student = jsonable_encoder(student)
+    new_student = await client.create_document(student)
+    return new_student
 
 if __name__ == '__main__':
     uvicorn.run('main:app')
