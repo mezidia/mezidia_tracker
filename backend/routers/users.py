@@ -1,17 +1,22 @@
-from fastapi import APIRouter, status, Body
+from fastapi import APIRouter, status, Body, HTTPException
 
 from database import Client
-from models import UserModel
+from models import UserModel, UpdateUserModel
+
+from typing import List, Optional
+import os
 
 router = APIRouter(
     prefix='/user',
     tags=['Users']
 )
+password = os.getenv('DB_PASSWORD', 'password')
 
 
-@router.post('', response_description='Add new player', response_model=UserModel,
+@router.post('', response_description='Add new user', response_model=UserModel,
              status_code=status.HTTP_201_CREATED)
 async def create_player(player: UserModel = Body(...)):
+    client = Client(password, 'users')
     """
     Create a user:
     - **current user** should be admin
@@ -35,3 +40,63 @@ async def create_player(player: UserModel = Body(...)):
     """
     result = await client.create_document(player)
     return result
+
+
+@router.get('s', response_description='List all users', response_model=List[UserModel],
+            status_code=status.HTTP_200_OK)
+async def list_users():
+    """
+    Get all users
+    """
+    client = Client(password, 'users')
+    cities = await client.get_all_objects()
+    return cities
+
+
+@router.get('', response_description='Get a single user', response_model=UserModel,
+            status_code=status.HTTP_200_OK)
+async def show_user(identifier: Optional[str] = None, email: Optional[str] = None):
+    """
+    Get a user by email:
+    - **email**: user's email
+    """
+    client = Client(password, 'users')
+    variables = locals()
+    options = {'identifier': '_id', 'email': 'email'}
+    for key in variables.keys():
+        if variables[key] is not None:
+            return await client.get_object({options[key]: variables[key]})
+    raise HTTPException(status_code=404, detail='Set some parameters')
+
+
+@router.put('', response_description='Update a user', response_model=UpdateUserModel,
+            status_code=status.HTTP_200_OK)
+async def update_user(identifier: Optional[str] = None, email: Optional[str] = None,
+                      city: UpdateUserModel = Body(...)):
+    """
+    Update a user by email:
+    - **email**: user's email
+    """
+    client = Client(password, 'users')
+    variables = locals()
+    options = {'identifier': '_id', 'email': 'email'}
+    for key in variables.keys():
+        if variables[key] is not None:
+            return await client.update_object({options[key]: variables[key]}, city)
+    raise HTTPException(status_code=404, detail='Set some parameters')
+
+
+@router.delete('', response_description='Delete a user',
+               status_code=status.HTTP_204_NO_CONTENT)
+async def delete_user(identifier: Optional[str] = None, email: Optional[str] = None):
+    """
+    Delete a user by email:
+    - **email**: user's email
+    """
+    client = Client(password, 'users')
+    variables = locals()
+    options = {'identifier': '_id', 'email': 'email'}
+    for key in variables.keys():
+        if variables[key] is not None:
+            return await client.delete_object({options[key]: variables[key]})
+    raise HTTPException(status_code=404, detail='Set some parameters')
