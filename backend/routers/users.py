@@ -10,7 +10,7 @@ router = APIRouter(
     prefix='/user',
     tags=['Users']
 )
-password = os.getenv('DB_PASSWORD', 'password')
+password = os.getenv('DB_PASSWORD', 'QWEasdZXC<0911>')
 
 
 @router.post('', response_description='Add new user', response_model=UserModel,
@@ -19,24 +19,13 @@ async def create_player(player: UserModel = Body(...)):
     client = Client(password, 'users')
     """
     Create a user:
-    - **current user** should be admin
-    - **user_id**: user id from Telegram
-    - **telegram_name**: the user nickname in Telegram
-    - **name**: game name
-    - **level**: player level
-    - **experience**: current player experience
-    - **health**: current player health
-    - **energy**: current player energy
-    - **strength**: current player strength
-    - **agility**: current player agility
-    - **intuition**: current player intuition
-    - **intelligence**: current player intelligence
-    - **hero_class**: player hero class
-    - **nation**: name of the country where player was born
-    - **money**: current player money
-    - **items**: list of items that player has
-    - **mount**: description of the mount
-    - **current_state**: place where player is at this time
+    - **name**: user's first name
+    - **surname**: user's second name
+    - **email**: user's email
+    - **github_nickname**: user's github nickname
+    - **gitlab_nickname**: user's github nickname
+    - **team**: user's team name
+    - **password**: user's password
     """
     result = await client.create_document(player)
     return result
