@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr
 from bson import ObjectId
-from typing import Optional
+from typing import Optional, List
 
 
 class PyObjectId(ObjectId):
@@ -24,9 +24,9 @@ class UserModel(BaseModel):
     name: str = Field(...)
     surname: str = Field(...)
     email: EmailStr = Field(...)
-    github_nickname: str = Field(...)
-    gitlab_nickname: str = Field(...)
-    team: str = Field(...)
+    github_nickname: Optional[str] = Field(...)
+    gitlab_nickname: Optional[str] = Field(...)
+    teams: List[str] = Field(...)
     password: str = Field(...)
 
     class Config:
@@ -40,7 +40,7 @@ class UserModel(BaseModel):
                 "email": "jdoe@example.com",
                 'github_nickname': 'mez',
                 'gitlab_nickname': 'mez',
-                'team': 'mezidia',
+                'teams': ['mezidia'],
                 'password': 'hello',
             }
         }
@@ -52,10 +52,23 @@ class UpdateUserModel(BaseModel):
     email: Optional[EmailStr]
     github_nickname: Optional[str]
     gitlab_nickname: Optional[str]
-    team: Optional[str]
+    teams: Optional[List[str]]
     password: Optional[str]
 
     class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "name": "Jane",
+                'surname': 'Doe',
+                "email": "jdoe@example.com",
+                'github_nickname': 'mez',
+                'gitlab_nickname': 'mez',
+                'teams': ['mezidia'],
+                'password': 'hello',
+            }
+        }
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
         schema_extra = {
