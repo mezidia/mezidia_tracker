@@ -10,7 +10,7 @@ router = APIRouter(
     prefix='/user',
     tags=['Users']
 )
-password = os.getenv('DB_PASSWORD', 'QWEasdZXC<0911>')
+password = os.getenv('DB_PASSWORD', 'password')
 
 
 @router.post('', response_description='Add new user', response_model=UserModel,
