@@ -2,8 +2,9 @@ import React from 'react';
 
 const Header = ({ title }) => {
   return (
-    <header>
-      <h1 style={{color: 'red', backgroundColor: 'blue'}}>{title}</h1>
+    <header className='header'>
+      <h1>{title}</h1>
+      <button className='btn'>Add</button>
     </header>
   )
 }
