@@ -1,9 +1,19 @@
 import uvicorn
 from fastapi import FastAPI, status
+from fastapi.middleware.cors import CORSMiddleware
 
 from routers import users
 
 app = FastAPI()
+origins = ['https://localhost:3000']
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=['*'],
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
 
 
 @app.get('/', status_code=status.HTTP_200_OK)
