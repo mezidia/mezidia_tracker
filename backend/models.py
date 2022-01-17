@@ -69,16 +69,26 @@ class UpdateUserModel(BaseModel):
                 'password': 'hello',
             }
         }
+
+
+class ProjectModel(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    name: str = Field(...)
+    github_url: Optional[str] = Field(...)
+    gitlab_url: Optional[str] = Field(...)
+    members: List[str] = Field(...)
+    tasks: List[str] = Field(...)
+
+    class Config:
+        allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
-                "name": "Jane",
-                'surname': 'Doe',
-                "email": "jdoe@example.com",
-                'github_nickname': 'mez',
-                'gitlab_nickname': 'mez',
-                'team': 'mezidia',
-                'password': 'hello',
+                "name": "mezgoodle/mezidia_tracker",
+                'github_url': 'https://github.com/mezgoodle/mezidia_tracker',
+                "gitlab_url": "https://gitlab.com/mezgoodle/mezidia_tracker",
+                'members': ['mezgoodle'],
+                'tasks': ['do a readme'],
             }
         }
