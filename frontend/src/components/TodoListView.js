@@ -1,7 +1,6 @@
 import TodoItem from "./Todo";
 
 const TodoListView = (props) => {
-  console.log(props.todoList);
   return (
     <div>
       <ul>

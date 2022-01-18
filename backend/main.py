@@ -5,7 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers import users
 
 app = FastAPI()
-origins = ['https://localhost:3000']
+origins = [
+    "http://localhost",
+    "http://localhost:3000"
+]
 
 app.add_middleware(
     CORSMiddleware,

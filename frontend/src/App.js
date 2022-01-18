@@ -20,7 +20,6 @@ function App() {
     axios.post('https://localhost:8080/api/todo', {'title': title, 'description': desc})
       .then(res => console.log(res));
   };
-  console.log(todoList);
 
   return (
     <div
