@@ -38,8 +38,8 @@ async def list_users():
     Get all users
     """
     client = Client(password, 'users')
-    cities = await client.get_all_objects()
-    return cities
+    users = await client.get_all_objects()
+    return users
 
 
 @router.get('', response_description='Get a single user', response_model=UserModel,

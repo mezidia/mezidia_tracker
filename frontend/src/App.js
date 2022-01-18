@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import TodoListView from "./components/TodoListView";
 
 function App() {
   const [todoList, setTodoList] = useState([{}]);
@@ -9,7 +10,7 @@ function App() {
   const [desc, setDesc] = useState('');
 
   useEffect(() => {
-    axios.get('https://localhost:8080/api/todo')
+    axios.get('http://127.0.0.1:8000/users')
       .then(res => {
         setTodoList(res.data);
       })
@@ -19,6 +20,7 @@ function App() {
     axios.post('https://localhost:8080/api/todo', {'title': title, 'description': desc})
       .then(res => console.log(res));
   };
+  console.log(todoList);
 
   return (
     <div
@@ -41,7 +43,7 @@ function App() {
         </span>
         <h5 className='card text-white bg-dark mb-3'>Your tasks</h5>
         <div>
-
+          <TodoListView todoList={todoList}/>
         </div>
       </div>
       <h6 className='card text-dark bg-warning py-1 mb-0'>Copyright 2022, All rights are reserved &copy;</h6>
