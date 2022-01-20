@@ -26,9 +26,9 @@ class UserModel(BaseModel):
     name: str = Field(...)
     surname: str = Field(...)
     email: EmailStr = Field(...)
-    github_nickname: Optional[str] = Field(...)
-    gitlab_nickname: Optional[str] = Field(...)
-    bitbucket_nickname: Optional[str] = Field(...)
+    github_nickname: Optional[str]
+    gitlab_nickname: Optional[str]
+    bitbucket_nickname: Optional[str]
     teams: List[str] = Field(...)
     password: str = Field(...)
 
@@ -82,8 +82,8 @@ class ProjectModel(BaseModel):
     name: str = Field(...)
     author: str = Field(...)
     github_url: HttpUrl = Field(...)
-    gitlab_url: Optional[HttpUrl] = Field(...)
-    bitbucket_url: Optional[HttpUrl] = Field(...)
+    gitlab_url: Optional[HttpUrl]
+    bitbucket_url: Optional[HttpUrl]
     members: List[str] = Field(...)
     tasks: List[str] = Field(...)
 
@@ -114,11 +114,11 @@ class TaskModel(BaseModel):
     author: str = Field(...)
     workers: List[str] = Field(...)
     until_date: datetime = Field(...)
-    github_link: Optional[HttpUrl] = Field(...)
-    gitlab_link: Optional[HttpUrl] = Field(...)
-    bitbucket_link: Optional[HttpUrl] = Field(...)
+    github_link: Optional[HttpUrl]
+    gitlab_link: Optional[HttpUrl]
+    bitbucket_link: Optional[HttpUrl]
     desc: str = Field(...)
 
-    
+
 class UpdateTaskModel(BaseModel):
     pass
