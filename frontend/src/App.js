@@ -3,6 +3,7 @@ import axios from "axios";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UserListView from "./components/UserListView";
+import RegisterForm from "./components/Forms/RegisterForm";
 
 function App() {
   const [userList, setUserList] = useState([{}]);
@@ -17,6 +18,7 @@ function App() {
   return (
     <div>
       <UserListView userList={userList}/>
+      <RegisterForm/>
     </div>
   )
 }
