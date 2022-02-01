@@ -14,8 +14,8 @@ class Client:
         :param collection_name: name of collection in current database
         """
         cluster = motor.motor_asyncio.AsyncIOMotorClient(
-            f'mongodb+srv://mezgoodle:{password}@mezidiatracker.'
-            f'hpq3c.mongodb.net/mezidia_tracker?retryWrites=true&w=majority')
+            f'mongodb+srv://mezidia:{password}@mezidiatracker.'
+            f'sqnpg.mongodb.net/mezidia_tracker?retryWrites=true&w=majority')
         db = cluster[db_name]
         self.collection = db[collection_name]
 

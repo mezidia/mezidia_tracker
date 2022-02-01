@@ -2,6 +2,7 @@ from fastapi import APIRouter, status, Body, HTTPException
 
 from database import Client
 from models import UserModel, UpdateUserModel
+from config import DB_PASSWORD
 
 from typing import List, Optional
 import os
@@ -10,13 +11,11 @@ router = APIRouter(
     prefix='/user',
     tags=['Users']
 )
-password = os.getenv('DB_PASSWORD', 'password')
 
 
 @router.post('', response_description='Add new user', response_model=UserModel,
              status_code=status.HTTP_201_CREATED)
-async def create_player(player: UserModel = Body(...)):
-    client = Client(password, 'users')
+async def create_user(player: UserModel = Body(...)):
     """
     Create a user:
     - **name**: user's first name
@@ -27,6 +26,7 @@ async def create_player(player: UserModel = Body(...)):
     - **team**: user's team name
     - **password**: user's password
     """
+    client = Client(DB_PASSWORD, 'users')
     result = await client.create_document(player)
     return result
 
@@ -37,7 +37,7 @@ async def list_users():
     """
     Get all users
     """
-    client = Client(password, 'users')
+    client = Client(DB_PASSWORD, 'users')
     users = await client.get_all_objects()
     return users
 
@@ -49,7 +49,7 @@ async def show_user(identifier: Optional[str] = None, email: Optional[str] = Non
     Get a user by email:
     - **email**: user's email
     """
-    client = Client(password, 'users')
+    client = Client(DB_PASSWORD, 'users')
     variables = locals()
     options = {'identifier': '_id', 'email': 'email'}
     for key in variables.keys():
@@ -66,7 +66,7 @@ async def update_user(identifier: Optional[str] = None, email: Optional[str] = N
     Update a user by email:
     - **email**: user's email
     """
-    client = Client(password, 'users')
+    client = Client(DB_PASSWORD, 'users')
     variables = locals()
     options = {'identifier': '_id', 'email': 'email'}
     for key in variables.keys():
@@ -82,7 +82,7 @@ async def delete_user(identifier: Optional[str] = None, email: Optional[str] = N
     Delete a user by email:
     - **email**: user's email
     """
-    client = Client(password, 'users')
+    client = Client(DB_PASSWORD, 'users')
     variables = locals()
     options = {'identifier': '_id', 'email': 'email'}
     for key in variables.keys():
