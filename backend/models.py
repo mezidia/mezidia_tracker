@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field, EmailStr, HttpUrl, SecretStr
+from pydantic import BaseModel, Field, EmailStr, HttpUrl
 from bson import ObjectId
 from typing import Optional, List
 
@@ -30,7 +30,7 @@ class UserModel(BaseModel):
     gitlab_nickname: Optional[str]
     bitbucket_nickname: Optional[str]
     teams: List[str] = Field(...)
-    password: SecretStr = Field(...)
+    password: str = Field(...)
 
     class Config:
         allow_population_by_field_name = True
@@ -58,7 +58,7 @@ class UpdateUserModel(BaseModel):
     gitlab_nickname: Optional[str]
     bitbucket_nickname: Optional[str]
     teams: Optional[List[str]]
-    password: Optional[SecretStr]
+    password: Optional[str]
 
     class Config:
         arbitrary_types_allowed = True
