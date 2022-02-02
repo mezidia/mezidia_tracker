@@ -31,7 +31,7 @@ function App() {
       .finally(() => {
         setLoading(false);
       })
-  }, [])
+  })
 
   if (loading) return 'Loading...';
   if (error) return 'Error!';
