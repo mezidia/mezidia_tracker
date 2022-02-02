@@ -4,15 +4,17 @@ import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UserListView from "./components/UserListView";
 import RegisterForm from "./components/Forms/RegisterForm";
+import fetchAllTasks from "./utils";
 
 function App() {
   const [userList, setUserList] = useState([{}]);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/users')
-      .then(res => {
-        setUserList(res.data);
-      })
+    fetchAllTasks('users').then(resp => setUserList(resp));
+    // axios.get('http://127.0.0.1:8000/users')
+    //   .then(res => {
+    //     setUserList(res.data);
+    //   })
   })
 
   return (
