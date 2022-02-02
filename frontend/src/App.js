@@ -10,7 +10,7 @@ function App() {
   const config = new Config();
 
   const [userList, setUserList] = useState([{}]);
-  const [loading, setLoading] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -22,19 +22,18 @@ function App() {
         throw response;
       })
       .then(users => {
-        setUserList(users);
-      })
-      .catch(error => {
-        console.error('Error while fetching data: ', error);
-        setError(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      })
-  })
+          setIsLoaded(true);
+          setUserList(users);
+        },
+        (error => {
+          setIsLoaded(true);
+          console.error('Error while fetching data: ', error);
+          setError(error);
+        }))
+  }, [])
 
-  if (loading) return 'Loading...';
-  if (error) return 'Error!';
+  if (error) return <div>Error: {error.message}</div>;
+  if (!isLoaded) return <div>Loading...</div>;
 
   return (
     <div>
