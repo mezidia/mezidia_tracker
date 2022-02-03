@@ -1,8 +1,8 @@
 from datetime import datetime
+from typing import Optional, List
+from bson import ObjectId
 
 from pydantic import BaseModel, Field, EmailStr, HttpUrl
-from bson import ObjectId
-from typing import Optional, List
 
 
 class PyObjectId(ObjectId):

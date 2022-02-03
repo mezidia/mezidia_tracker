@@ -5,7 +5,6 @@ from models import UserModel, UpdateUserModel
 from config import DB_PASSWORD
 
 from typing import List, Optional
-import os
 
 router = APIRouter(
     prefix='/user',
