@@ -1,7 +1,12 @@
-from typing import List, NoReturn
+from typing import List
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, status, Body
 from fastapi.responses import HTMLResponse
+
+from models import ChatModel, MessageModel
+from database import Client
+from config import DB_PASSWORD
+
 
 router = APIRouter(
     prefix='/chat',
@@ -73,6 +78,35 @@ manager = ConnectionManager()
 @router.get("/")
 async def get() -> HTMLResponse:
     return HTMLResponse(html)
+
+
+@router.post('', response_description='Add new chat', response_model=ChatModel,
+             status_code=status.HTTP_201_CREATED)
+async def create_chat(chat: ChatModel = Body(...)):
+    """
+    Create a user:
+    - **name**: user's first name
+    - **surname**: user's second name
+    - **email**: user's email
+    - **github_nickname**: user's github nickname
+    - **gitlab_nickname**: user's github nickname
+    - **team**: user's team name
+    - **password**: user's password
+    """
+    client = Client(DB_PASSWORD, 'chats')
+    result = await client.create_document(chat)
+    return result
+
+
+@router.get('s', response_description='List all users', response_model=List[ChatModel],
+            status_code=status.HTTP_200_OK)
+async def list_chats():
+    """
+    Get all users
+    """
+    client = Client(DB_PASSWORD, 'chats')
+    chats = await client.get_all_objects()
+    return chats
 
 
 @router.websocket("/{id}/{client_id}")
