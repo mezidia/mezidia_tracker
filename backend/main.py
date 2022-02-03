@@ -28,4 +28,4 @@ app.include_router(users.router)
 app.include_router(chat.router)
 
 if __name__ == '__main__':
-    uvicorn.run('main:app')
+    uvicorn.run('main:app', reload=True)
