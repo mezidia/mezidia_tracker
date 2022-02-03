@@ -2,6 +2,7 @@ from fastapi import APIRouter, status, Body, HTTPException
 
 from database import Client
 from models import UserModel, UpdateUserModel
+from hashing import Hash
 from config import DB_PASSWORD
 
 from typing import List, Optional
@@ -27,6 +28,7 @@ async def create_user(player: UserModel = Body(...)):
     - **password**: user's password
     """
     client = Client(DB_PASSWORD, 'users')
+    player.password = Hash.bcrypt(player.password)
     result = await client.create_document(player)
     return result
 
