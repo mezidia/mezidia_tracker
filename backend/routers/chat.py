@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, NoReturn
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
@@ -68,18 +68,17 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 
-@router.get("/chat")
-async def get():
+@router.get("/")
+async def get() -> HTMLResponse:
     return HTMLResponse(html)
 
 
 @router.websocket("/ws/{client_id}")
-async def websocket_endpoint(websocket: WebSocket, client_id: int):
+async def websocket_endpoint(websocket: WebSocket, client_id: int) :
     await manager.connect(websocket)
     try:
         while True:
             data = await websocket.receive_text()
-            await manager.send_personal_message(f"You wrote: {data}", websocket)
             await manager.broadcast(f"Client #{client_id} says: {data}")
     except WebSocketDisconnect:
         manager.disconnect(websocket)
