@@ -149,3 +149,13 @@ class ChatModel(BaseModel):
     chat_id: str = Field(...)
     name: str = Field(...)
     messages: List[dict] = Field(...)
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "chat_id": "1",
+                'messages': [{}],
+            }
+        }
