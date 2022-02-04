@@ -138,11 +138,6 @@ class UpdateTaskModel(BaseModel):
 # P.S. When we trying to retrieve message for some chat,
 # we need to start from end of our messages object.
 
-class MessageModel(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    user_id: str = Field(...)
-    content: str = Field(...)
-
 
 class ChatModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
