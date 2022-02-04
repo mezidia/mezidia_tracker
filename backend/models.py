@@ -86,6 +86,7 @@ class ProjectModel(BaseModel):
     bitbucket_url: Optional[HttpUrl]
     members: List[str] = Field(...)
     tasks: List[str] = Field(...)
+    # TO DO: chat row
 
     class Config:
         allow_population_by_field_name = True
