@@ -112,11 +112,11 @@ async def websocket_endpoint(name: str, websocket: WebSocket, client_id: int):
             data = await websocket.receive_text()
 
             client = Client(DB_PASSWORD, 'chats')
-            chat = await client.get_object({"chat_id": name})
+            chat = await client.get_object({"chat_name": name})
             messages = chat['messages']
             messages.append({"user_id": client_id, "content": data})
 
-            _ = await client.update_one({"chat_id": name}, {'$set': {'messages': messages}})
+            _ = await client.collection.update_one({"chat_name": name}, {'$set': {'messages': messages}})
 
             await manager.broadcast(f"{client_id}: {data}")
     except WebSocketDisconnect:
