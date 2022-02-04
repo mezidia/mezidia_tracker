@@ -86,7 +86,7 @@ class ProjectModel(BaseModel):
     bitbucket_url: Optional[HttpUrl]
     members: List[str] = Field(...)
     tasks: List[str] = Field(...)
-    # TO DO: chat row
+    chat: str = Field(...)
 
     class Config:
         allow_population_by_field_name = True
@@ -142,8 +142,7 @@ class UpdateTaskModel(BaseModel):
 
 class ChatModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    chat_id: str = Field(...)
-    name: str = Field(...)
+    chat_name: str = Field(...)
     messages: List[dict] = Field(...)
 
     class Config:

@@ -85,8 +85,7 @@ async def get() -> HTMLResponse:
 async def create_chat(chat: ChatModel = Body(...)):
     """
     Create a chat:
-    - **chat_id**: chat id
-    - **name**: chat name
+    - **chat_name**: chat name
     - **messages**: chat messages
     """
     client = Client(DB_PASSWORD, 'chats')
@@ -105,19 +104,19 @@ async def list_chats():
     return chats
 
 
-@router.websocket("/{id}/{client_id}")
-async def websocket_endpoint(id: int, websocket: WebSocket, client_id: int):
+@router.websocket("/{name}/{client_id}")
+async def websocket_endpoint(name: str, websocket: WebSocket, client_id: int):
     await manager.connect(websocket)
     try:
         while True:
             data = await websocket.receive_text()
 
             client = Client(DB_PASSWORD, 'chats')
-            chat = await client.get_object({"chat_id": id})
+            chat = await client.get_object({"chat_id": name})
             messages = chat['messages']
             messages.append({"user_id": client_id, "content": data})
 
-            # _ = await client.update_object({"chat_id": id}, )
+            _ = await client.update_one({"chat_id": name}, {'$set': {'messages': messages}})
 
             await manager.broadcast(f"{client_id}: {data}")
     except WebSocketDisconnect:
