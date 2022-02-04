@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, status, Body
 from fastapi.responses import HTMLResponse
 
-from models import ChatModel, MessageModel
+from models import ChatModel
 from database import Client
 from config import DB_PASSWORD
 
@@ -20,7 +20,7 @@ html = """
         <title>Chat</title>
     </head>
     <body>
-        <h1>Chat: <span id="chat-id"></span></h1>
+        <h1>Chat: <span id="chat-name"></span></h1>
         <h2>Your ID: <span id="ws-id"></span></h2>
         <form action="" onsubmit="sendMessage(event)">
             <input type="text" id="messageText" autocomplete="off"/>
@@ -30,10 +30,10 @@ html = """
         </ul>
         <script>
             var client_id = Date.now()
-            var chat_id = 1
+            var chat_name = "mezidia-tracker"
             document.querySelector("#ws-id").textContent = client_id;
-            document.querySelector("#chat-id").textContent = chat_id;
-            var ws = new WebSocket(`ws://localhost:8000/${chat_id}/${client_id}`);
+            document.querySelector("#chat-name").textContent = chat_name;
+            var ws = new WebSocket(`ws://localhost:8000/${chat_name}/${client_id}`);
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')
@@ -75,7 +75,7 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 
-@router.get("/")
+@router.get("")
 async def get() -> HTMLResponse:
     return HTMLResponse(html)
 
