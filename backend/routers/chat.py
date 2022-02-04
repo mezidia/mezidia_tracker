@@ -84,25 +84,21 @@ async def get() -> HTMLResponse:
              status_code=status.HTTP_201_CREATED)
 async def create_chat(chat: ChatModel = Body(...)):
     """
-    Create a user:
-    - **name**: user's first name
-    - **surname**: user's second name
-    - **email**: user's email
-    - **github_nickname**: user's github nickname
-    - **gitlab_nickname**: user's github nickname
-    - **team**: user's team name
-    - **password**: user's password
+    Create a chat:
+    - **chat_id**: chat id
+    - **name**: chat name
+    - **messages**: chat messages
     """
     client = Client(DB_PASSWORD, 'chats')
     result = await client.create_document(chat)
     return result
 
 
-@router.get('s', response_description='List all users', response_model=List[ChatModel],
+@router.get('s', response_description='List all chats', response_model=List[ChatModel],
             status_code=status.HTTP_200_OK)
 async def list_chats():
     """
-    Get all users
+    Get all chats
     """
     client = Client(DB_PASSWORD, 'chats')
     chats = await client.get_all_objects()
