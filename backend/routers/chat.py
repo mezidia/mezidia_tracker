@@ -32,19 +32,27 @@ html = """
 
             var client_id = Date.now()
             var chat_name = "mezidia-tracker"
+            var chat;
 
-            url = `127.0.0.1:8000/chat/${chat_name}`;
-            let response = await fetch(url);
-            chat = await response.json();
+            async function fetchChat(url) {
+              const response = await fetch(url);
+              const chat = await response.json();
+              return chat;
+            }
 
             function loadMessages() {
-                for (key of chat['messages']) {
+                const url = `/chat/${chat_name}`;
+
+                fetchChat(url).then(chat => {
+                  for (key of chat['messages']) {
                     var messages = document.getElementById('messages')
                     var message = document.createElement('li')
                     var content = document.createTextNode(`${key['user_id']}: ${key['content']}`)
                     message.appendChild(content)
                     messages.appendChild(message)
                 }
+                });            
+                            
             }
 
             var client_id = Date.now()
@@ -65,6 +73,7 @@ html = """
                 input.value = ''
                 event.preventDefault()
             }
+            document.addEventListener("DOMContentLoaded", loadMessages);
         </script>
     </body>
 </html>
