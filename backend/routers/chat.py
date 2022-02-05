@@ -148,7 +148,7 @@ async def list_chats():
     return chats
 
 
-@router.websocket("/{name}/{client_id}")
+@router.websocket('/{name}/{client_id}')
 async def websocket_endpoint(name: str, websocket: WebSocket, client_id: int):
     await manager.connect(websocket)
     try:
@@ -156,13 +156,13 @@ async def websocket_endpoint(name: str, websocket: WebSocket, client_id: int):
             data = await websocket.receive_text()
 
             client = Client(DB_PASSWORD, 'chats')
-            chat = await client.get_object({"chat_name": name})
+            chat = await client.get_object({'chat_name': name})
             messages = chat['messages']
-            messages.append({"user_id": client_id, "content": data})
+            messages.append({'user_id': client_id, 'content': data})
 
-            _ = await client.collection.update_one({"chat_name": name}, {'$set': {'messages': messages}})
+            _ = await client.collection.update_one({'chat_name': name}, {'$set': {'messages': messages}})
 
-            await manager.broadcast(f"{client_id}: {data}")
+            await manager.broadcast(f'{client_id}: {data}')
     except WebSocketDisconnect:
         manager.disconnect(websocket)
-        await manager.broadcast(f"{client_id} left the chat")
+        await manager.broadcast(f'{client_id} left the chat')

@@ -125,21 +125,6 @@ class UpdateTaskModel(BaseModel):
     pass
 
 
-# TO DO: MessageCache Model:
-# { "chat": {
-#     "id": int,
-#     "messages": [{
-#         "id": int,
-#         "user_id": int,
-#         "data": int,
-#         "date": datetime,
-#         }] 
-#     }
-# }
-# P.S. When we trying to retrieve message for some chat,
-# we need to start from end of our messages object.
-
-
 class ChatModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     chat_name: str = Field(...)
