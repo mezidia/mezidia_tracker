@@ -16,66 +16,65 @@ router = APIRouter(
 html = """
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Chat</title>
-    </head>
-    <body>
-        <h1>Chat: <span id="chat-name"></span></h1>
-        <h2>Your ID: <span id="ws-id"></span></h2>
-        <form action="" onsubmit="sendMessage(event)">
-            <input type="text" id="messageText" autocomplete="off"/>
-            <button>Send</button>
-        </form>
-        <ul id='messages'>
-        </ul>
-        <script>
+   <head>
+      <title>Chat</title>
+   </head>
+   <body>
+      <h1>Chat: <span id="chat-name"></span></h1>
+      <h2>Your ID: <span id="ws-id"></span></h2>
+      <form action="" onsubmit="sendMessage(event)">
+         <input type="text" id="messageText" autocomplete="off"/>
+         <button>Send</button>
+      </form>
+      <ul id='messages'>
+      </ul>
+      <script>
+         var client_id = Date.now()
+         var chat_name = "mezidia-tracker"
+         
+         async function fetchChat(url) {
+           const response = await fetch(url);
+           const chat = await response.json();
+           return chat;
+         }
+         
+         function loadMessages() {
+             const url = `/chat/${chat_name}`;
+         
+             fetchChat(url).then(chat => {
+               for (key of chat['messages']) {
+                 var messages = document.getElementById('messages')
+                 var message = document.createElement('li')
+                 var content = document.createTextNode(`${key['user_id']}: ${key['content']}`)
+                 message.appendChild(content)
+                 messages.appendChild(message)
+             }
+             });            
+                         
+         }
+         
+         document.querySelector("#ws-id").textContent = client_id;
+         document.querySelector("#chat-name").textContent = chat_name;
+         var ws = new WebSocket(`ws://localhost:8000/${chat_name}/${client_id}`);
 
-            var client_id = Date.now()
-            var chat_name = "mezidia-tracker"
-            var chat;
+         ws.onmessage = function(event) {
+             var messages = document.getElementById('messages')
+             var message = document.createElement('li')
+             var content = document.createTextNode(event.data)
+             message.appendChild(content)
+             messages.appendChild(message)
+         };
 
-            async function fetchChat(url) {
-              const response = await fetch(url);
-              const chat = await response.json();
-              return chat;
-            }
+         function sendMessage(event) {
+             var input = document.getElementById("messageText")
+             ws.send(input.value)
+             input.value = ''
+             event.preventDefault()
+         }
 
-            function loadMessages() {
-                const url = `/chat/${chat_name}`;
-
-                fetchChat(url).then(chat => {
-                  for (key of chat['messages']) {
-                    var messages = document.getElementById('messages')
-                    var message = document.createElement('li')
-                    var content = document.createTextNode(`${key['user_id']}: ${key['content']}`)
-                    message.appendChild(content)
-                    messages.appendChild(message)
-                }
-                });            
-                            
-            }
-
-            var client_id = Date.now()
-            var chat_name = "mezidia-tracker"
-            document.querySelector("#ws-id").textContent = client_id;
-            document.querySelector("#chat-name").textContent = chat_name;
-            var ws = new WebSocket(`ws://localhost:8000/${chat_name}/${client_id}`);
-            ws.onmessage = function(event) {
-                var messages = document.getElementById('messages')
-                var message = document.createElement('li')
-                var content = document.createTextNode(event.data)
-                message.appendChild(content)
-                messages.appendChild(message)
-            };
-            function sendMessage(event) {
-                var input = document.getElementById("messageText")
-                ws.send(input.value)
-                input.value = ''
-                event.preventDefault()
-            }
-            document.addEventListener("DOMContentLoaded", loadMessages);
-        </script>
-    </body>
+         document.addEventListener("DOMContentLoaded", loadMessages);
+      </script>
+   </body>
 </html>
 """
 
