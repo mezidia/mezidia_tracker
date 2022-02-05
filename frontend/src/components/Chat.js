@@ -4,6 +4,7 @@ import ChatMessage from "./ChatMessage";
 
 const ChatRoom = () => {
   const config = new Config();
+  const ws = new WebSocket(`ws://localhost:8000/mezidia-tracker/111`);
 
   const [messages, setMessages] = useState([{}]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -32,11 +33,12 @@ const ChatRoom = () => {
   if (error) return <div>Error: {error.message}</div>;
   if (!isLoaded) return <div>Loading...</div>;
 
-
   const sendMessage = async (e) => {
     e.preventDefault();
-
-    console.log(formValue);
+    ws.send(formValue)
+    let stMessages = messages;
+    stMessages.push({'user_id': '1643983021344', 'content': formValue})
+    setMessages(stMessages);
     setFormValue('');
   }
 
