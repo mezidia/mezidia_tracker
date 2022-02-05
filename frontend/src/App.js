@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import UserListView from "./components/UserListView";
 import RegisterForm from "./components/Forms/RegisterForm";
 import Config from "./config";
+import ChatRoom from "./components/Chat";
 
 function App() {
   const config = new Config();
@@ -39,6 +40,8 @@ function App() {
     <div>
       <UserListView userList={userList}/>
       <RegisterForm/>
+      <hr/>
+      <ChatRoom />
     </div>
   )
 }
