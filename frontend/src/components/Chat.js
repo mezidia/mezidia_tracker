@@ -36,9 +36,7 @@ const ChatRoom = () => {
   const sendMessage = async (e) => {
     e.preventDefault();
     ws.send(formValue)
-    let stMessages = messages;
-    stMessages.push({'user_id': '1643983021344', 'content': formValue})
-    setMessages(stMessages);
+    setMessages([...messages, {'user_id': '1643983021344', 'content': formValue}]);
     setFormValue('');
   }
 
