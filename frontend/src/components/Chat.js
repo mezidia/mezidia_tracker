@@ -33,10 +33,13 @@ const ChatRoom = () => {
   if (error) return <div>Error: {error.message}</div>;
   if (!isLoaded) return <div>Loading...</div>;
 
+  ws.onmessage = function (e) {
+    setMessages([...messages, {'user_id': '1643983021344', 'content': e.data}]);
+  }
+
   const sendMessage = async (e) => {
     e.preventDefault();
     ws.send(formValue)
-    setMessages([...messages, {'user_id': '1643983021344', 'content': formValue}]);
     setFormValue('');
   }
 
