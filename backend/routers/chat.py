@@ -147,6 +147,9 @@ async def list_chats():
     return chats
 
 
+# TO DO: update and delete messages
+
+
 @router.websocket('/{name}/{client_id}')
 async def websocket_endpoint(name: str, websocket: WebSocket, client_id: int):
     await manager.connect(websocket)
@@ -154,12 +157,15 @@ async def websocket_endpoint(name: str, websocket: WebSocket, client_id: int):
         while True:
             data = await websocket.receive_text()
 
+            # TO DO: datetime
+
             client = Client(DB_PASSWORD, 'chats')
             chat = await client.get_object({'chat_name': name})
             messages = chat['messages']
             messages.append({'user_id': client_id, 'content': data})
 
             _ = await client.collection.update_one({'chat_name': name}, {'$set': {'messages': messages}})
+
 
             await manager.broadcast(data)
     except WebSocketDisconnect:
