@@ -161,7 +161,7 @@ async def websocket_endpoint(name: str, websocket: WebSocket, client_id: int):
 
             _ = await client.collection.update_one({'chat_name': name}, {'$set': {'messages': messages}})
 
-            await manager.broadcast(f'{client_id}: {data}')
+            await manager.broadcast(data)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         await manager.broadcast(f'{client_id} left the chat')
