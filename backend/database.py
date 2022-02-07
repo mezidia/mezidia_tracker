@@ -16,7 +16,7 @@ class Client:
         """
         cluster = motor.motor_asyncio.AsyncIOMotorClient(
             f'mongodb+srv://mezidia:{password}@mezidiatracker.'
-            f'sqnpg.mongodb.net/mezidia_tracker?retryWrites=true&w=majority')
+            f'sqnpg.mongodb.net/mezidia_tracker?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE')
         db = cluster[db_name]
         self.collection = db[collection_name]
 
