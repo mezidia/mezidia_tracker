@@ -6,9 +6,22 @@ const ChatRoom = () => {
   const config = new Config();
   const ws = new WebSocket(`ws://localhost:8000/mezidia-tracker/111`);
 
-  const date = new Date()
+  function addZeroToMinutes(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+  }
+
+  function determineTime(time, timezone) {
+    return ((+time.substr(0, 2) + timezone) + time.substr(2)).toString();
+  }
+
+  const date = new Date();
   const currentTimeZoneOffsetInHours = date.getTimezoneOffset() / 60;
-  const utc_time = `${date.getHours() + currentTimeZoneOffsetInHours}:${date.getMinutes()}`;
+  const utc_time = `${date.getHours() + currentTimeZoneOffsetInHours}:${addZeroToMinutes(date.getMinutes())}`;
+
+  const user_timezone = date.getTimezoneOffset() / 60 * (-1);
 
   const [messages, setMessages] = useState([{}]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -38,7 +51,16 @@ const ChatRoom = () => {
   if (!isLoaded) return <div>Loading...</div>;
 
   ws.onmessage = function (e) {
-    setMessages([...messages, {'user_id': '1643983021344', 'content': e.data['content'], 'created_at': e.data['created_at']}]);
+    setMessages(
+      [
+        ...messages, 
+        {
+          'user_id': '1643983021344', 
+          'content': e.data['content'], 
+          'created_at': determineTime(e.data['created_at'], user_timezone),
+        }
+      ]
+    );
   }
 
   const sendMessage = async (e) => {
