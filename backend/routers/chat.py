@@ -1,6 +1,13 @@
-from typing import List, Optional
+from typing import List
 
-from fastapi import APIRouter, WebSocket, HTTPException, WebSocketDisconnect, status, Body
+from fastapi import (
+    APIRouter,
+    WebSocket,
+    HTTPException,
+    WebSocketDisconnect,
+    status,
+    Body,
+)
 from fastapi.responses import HTMLResponse
 
 from models import ChatModel
@@ -8,10 +15,7 @@ from database import Client
 from config import DB_PASSWORD
 
 
-router = APIRouter(
-    prefix='/chat',
-    tags=['Chat']
-)
+router = APIRouter(prefix='/chat', tags=['Chat'])
 
 
 class ConnectionManager:
@@ -41,8 +45,12 @@ async def get() -> HTMLResponse:
     pass
 
 
-@router.post('/create', response_description='Add new chat', response_model=ChatModel,
-             status_code=status.HTTP_201_CREATED)
+@router.post(
+    '/create',
+    response_description='Add new chat',
+    response_model=ChatModel,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_chat(chat: ChatModel = Body(...)):
     """
     Create a chat:
@@ -54,8 +62,12 @@ async def create_chat(chat: ChatModel = Body(...)):
     return result
 
 
-@router.get('/{name}', response_description='Get a single chat', response_model=ChatModel,
-            status_code=status.HTTP_200_OK)
+@router.get(
+    '/{name}',
+    response_description='Get a single chat',
+    response_model=ChatModel,
+    status_code=status.HTTP_200_OK,
+)
 async def get_chat_by_name(name: str):
     """
     Get a chat by name:
@@ -71,8 +83,12 @@ async def get_chat_by_name(name: str):
     return data
 
 
-@router.get('/all', response_description='List all chats', response_model=List[ChatModel],
-            status_code=status.HTTP_200_OK)
+@router.get(
+    '/all',
+    response_description='List all chats',
+    response_model=List[ChatModel],
+    status_code=status.HTTP_200_OK,
+)
 async def list_chats():
     """
     Get all chats
@@ -99,17 +115,17 @@ async def websocket_endpoint(name: str, websocket: WebSocket, client_id: int):
             messages = chat['messages']
             messages.append(
                 {
-                'user_id': client_id, 
-                'content': data['content'], 
-                'created_at': data['created_at'],
+                    'user_id': client_id,
+                    'content': data['content'],
+                    'created_at': data['created_at'],
                 }
             )
 
+            _ = await client.collection.update_one(
+                {'chat_name': name}, {'$set': {'messages': messages}}
+            )
 
-            _ = await client.collection.update_one({'chat_name': name}, {'$set': {'messages': messages}})
-
-
-            await manager.broadcast(data)
+            await manager.broadcast(data['content'])
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         await manager.broadcast(f'{client_id} left the chat')

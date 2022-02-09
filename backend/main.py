@@ -5,10 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers import users, chat
 
 app = FastAPI()
-origins = [
-    "http://localhost",
-    "http://localhost:3000"
-]
+origins = ["http://localhost", "http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,
