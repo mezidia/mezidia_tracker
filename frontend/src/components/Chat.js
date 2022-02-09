@@ -37,7 +37,7 @@ const ChatRoom = () => {
   if (!isLoaded) return <div>Loading...</div>;
 
   ws.onmessage = function (e) {
-    setMessages([...messages, {'user_id': '1643983021344', 'content': e.data}]);
+    setMessages([...messages, {'user_id': '1643983021344', 'content': e.data['content'], 'created_at': e.data['created_at']}]);
   }
 
   const sendMessage = async (e) => {
