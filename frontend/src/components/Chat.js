@@ -6,8 +6,9 @@ const ChatRoom = () => {
   const config = new Config();
   const ws = new WebSocket(`ws://localhost:8000/mezidia-tracker/111`);
 
-  const date = new Date();
-  const time_now = `${date.getHours()}:${date.getMinutes()}`;
+  const date = new Date()
+  const currentTimeZoneOffsetInHours = date.getTimezoneOffset() / 60;
+  const utc_time = `${date.getHours() + currentTimeZoneOffsetInHours}:${date.getMinutes()}`;
 
   const [messages, setMessages] = useState([{}]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -42,7 +43,7 @@ const ChatRoom = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    ws.send({'content': formValue, 'created_at': time_now})
+    ws.send({'content': formValue, 'created_at': utc_time})
     setFormValue('');
   }
 
