@@ -6,6 +6,9 @@ const ChatRoom = () => {
   const config = new Config();
   const ws = new WebSocket(`ws://localhost:8000/mezidia-tracker/111`);
 
+  const date = new Date();
+  const time_now = `${date.getHours()}:${date.getMinutes()}`;
+
   const [messages, setMessages] = useState([{}]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
