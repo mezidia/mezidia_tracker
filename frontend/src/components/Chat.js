@@ -6,22 +6,20 @@ const ChatRoom = () => {
   const config = new Config();
   const ws = new WebSocket(`ws://localhost:8000/mezidia-tracker/111`);
 
-  function addZeroToMinutes(i) {
-    if (i < 10) {
-        i = "0" + i;
+  const addZeroToMinutes = minutes => {
+    if (minutes < 10) {
+      minutes = '0' + minutes;
     }
-    return i;
+    return minutes;
   }
 
-  function determineTime(time, timezone) {
-    return ((+time.substr(0, 2) + timezone) + time.substr(2)).toString();
+  const determineTime = (time, timezone) => {
+    if (time) return ((+time.substr(0, 2) + timezone) + time.substr(2)).toString();
   }
 
   const date = new Date();
   const currentTimeZoneOffsetInHours = date.getTimezoneOffset() / 60;
   const utc_time = `${date.getHours() + currentTimeZoneOffsetInHours}:${addZeroToMinutes(date.getMinutes())}`;
-
-  const user_timezone = date.getTimezoneOffset() / 60 * (-1);
 
   const [messages, setMessages] = useState([{}]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -51,13 +49,14 @@ const ChatRoom = () => {
   if (!isLoaded) return <div>Loading...</div>;
 
   ws.onmessage = function (e) {
+    const data = e.data.split(',')
     setMessages(
       [
-        ...messages, 
+        ...messages,
         {
-          'user_id': '1643983021344', 
-          'content': e.data['content'], 
-          'created_at': determineTime(e.data['created_at'], user_timezone),
+          'user_id': '1643983021344',
+          'content': data[0],
+          'created_at': data[1],
         }
       ]
     );
@@ -65,13 +64,13 @@ const ChatRoom = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    ws.send({'content': formValue, 'created_at': utc_time})
+    ws.send(`${formValue},${utc_time}`)
     setFormValue('');
   }
 
   return (<>
     <main>
-      {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg}/>)}
+      {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} dateFunc={determineTime}/>)}
     </main>
 
     <form onSubmit={sendMessage}>

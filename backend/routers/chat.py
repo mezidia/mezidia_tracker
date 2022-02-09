@@ -107,6 +107,7 @@ async def websocket_endpoint(name: str, websocket: WebSocket, client_id: int):
     try:
         while True:
             data = await websocket.receive_text()
+            data_list = data.split(',')
 
             # TO DO: datetime
 
@@ -116,8 +117,8 @@ async def websocket_endpoint(name: str, websocket: WebSocket, client_id: int):
             messages.append(
                 {
                     'user_id': client_id,
-                    'content': data['content'],
-                    'created_at': data['created_at'],
+                    'content': data_list[0],
+                    'created_at': data_list[1],
                 }
             )
 
@@ -125,7 +126,7 @@ async def websocket_endpoint(name: str, websocket: WebSocket, client_id: int):
                 {'chat_name': name}, {'$set': {'messages': messages}}
             )
 
-            await manager.broadcast(data['content'])
+            await manager.broadcast(data)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         await manager.broadcast(f'{client_id} left the chat')

@@ -135,7 +135,7 @@ class ChatModel(BaseModel):
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
-                "chat_id": "1",
+                "chat_name": "1",
                 'messages': [{}],
             }
         }
