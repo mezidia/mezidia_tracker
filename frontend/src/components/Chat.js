@@ -42,7 +42,7 @@ const ChatRoom = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    ws.send(formValue)
+    ws.send({'content': formValue, 'created_at': time_now})
     setFormValue('');
   }
 
