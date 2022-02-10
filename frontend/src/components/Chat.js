@@ -26,23 +26,17 @@ const ChatRoom = () => {
   const [error, setError] = useState(null);
   const [formValue, setFormValue] = useState('');
 
+  const getMessages = async () => {
+    const response = await fetch(`${config.BASE_URL}/chat/mezidia-tracker`);
+    const data = await response.json();
+
+    if (!response.ok) setError(error);
+    else setMessages(data['messages']);
+    setIsLoaded(true);
+  }
+
   useEffect(() => {
-    fetch(`${config.BASE_URL}/chat/mezidia-tracker`)
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        }
-        throw response;
-      })
-      .then(messages => {
-          setIsLoaded(true);
-          setMessages(messages['messages']);
-        },
-        (error => {
-          setIsLoaded(true);
-          console.error('Error while fetching data: ', error);
-          setError(error);
-        }))
+    getMessages()
   }, [])
 
   if (error) return <div>Error: {error.message}</div>;
