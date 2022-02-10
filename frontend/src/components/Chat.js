@@ -6,12 +6,7 @@ const ChatRoom = () => {
   const config = new Config();
   const ws = new WebSocket(`ws://localhost:8000/mezidia-tracker/111`);
 
-  const addZeroToMinutes = minutes => {
-    if (minutes < 10) {
-      minutes = '0' + minutes;
-    }
-    return minutes;
-  }
+  const addZeroToMinutes = minutes => (minutes < 10 ? '0' + minutes : minutes);
 
   const determineTime = (time, timezone) => {
     if (time) return ((+time.substr(0, 2) + timezone) + time.substr(2)).toString();
