@@ -14,7 +14,7 @@ const ChatRoom = () => {
 
   const date = new Date();
   const currentTimeZoneOffsetInHours = date.getTimezoneOffset() / 60;
-  const utc_time = `${date.getHours() + currentTimeZoneOffsetInHours}:${addZeroToMinutes(date.getMinutes())}`;
+  const utc_time = `${addZeroToMinutes(date.getHours() + currentTimeZoneOffsetInHours)}:${addZeroToMinutes(date.getMinutes())}`;
 
   const [messages, setMessages] = useState([{}]);
   const [isLoaded, setIsLoaded] = useState(false);
