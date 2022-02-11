@@ -136,6 +136,6 @@ class ChatModel(BaseModel):
         schema_extra = {
             "example": {
                 "chat_name": "1",
-                'messages': [{}],
+                'messages': [],
             }
         }
