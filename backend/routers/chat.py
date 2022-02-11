@@ -63,6 +63,21 @@ async def create_chat(chat: ChatModel = Body(...)):
 
 
 @router.get(
+    '/all',
+    response_description='List all chats',
+    response_model=List[ChatModel],
+    status_code=status.HTTP_200_OK,
+)
+async def list_chats():
+    """
+    Get all chats
+    """
+    client = Client(DB_PASSWORD, 'chats')
+    chats = await client.get_all_objects()
+    return chats
+
+
+@router.get(
     '/{name}',
     response_description='Get a single chat',
     response_model=ChatModel,
@@ -83,22 +98,24 @@ async def get_chat_by_name(name: str):
     return data
 
 
-@router.get(
-    '/all',
-    response_description='List all chats',
-    response_model=List[ChatModel],
-    status_code=status.HTTP_200_OK,
+@router.delete(
+    '/{name}/{id}', response_description='Delete a message', status_code=status.HTTP_204_NO_CONTENT
 )
-async def list_chats():
+async def delete_message(name: str, id: int):
     """
-    Get all chats
+    Delete a user by email:
+    - **id**: message id
     """
+
     client = Client(DB_PASSWORD, 'chats')
-    chats = await client.get_all_objects()
-    return chats
-
-
-# TO DO: update and delete messages
+    data = await client.get_object({'chat_name': name})
+    data['messages'].pop(id)
+    try:
+        _ = await client.collection.update_one(
+            {'chat_name': name}, {'$set': {'messages': data['messages']}}
+        )
+    except:
+        raise HTTPException(status_code=404, detail='Set some parameters')
 
 
 @router.websocket('/{name}/{client_id}')
