@@ -18,10 +18,10 @@ const ChatRoom = () => {
   const minutes = addZeroToDate(date.getMinutes());
   const utc_time = `${hours}:${minutes}`;
 
-  const [messages, setMessages] = useState([{}]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState(null);
-  const [formValue, setFormValue] = useState('');
+  const [messages, setMessages] = useState([{}]),
+        [isLoaded, setIsLoaded] = useState(false),
+        [error, setError] = useState(null),
+        [formValue, setFormValue] = useState('');
 
   const getMessages = async () => {
     const response = await fetch(`${config.BASE_URL}/chat/mezidia-tracker`);

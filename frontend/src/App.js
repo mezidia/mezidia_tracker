@@ -10,9 +10,9 @@ import ChatRoom from "./components/Chat";
 function App() {
   const config = new Config();
 
-  const [userList, setUserList] = useState([{}]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState(null);
+  const [userList, setUserList] = useState([{}]),
+        [isLoaded, setIsLoaded] = useState(false),
+        [error, setError] = useState(null);
 
   const getUsers = async () => {
     const response = await fetch(`${config.BASE_URL}/users`);
@@ -35,7 +35,7 @@ function App() {
       <UserListView userList={userList}/>
       <RegisterForm/>
       <hr/>
-      <ChatRoom />
+      <ChatRoom/>
     </div>
   )
 }

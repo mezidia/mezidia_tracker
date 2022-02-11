@@ -1,10 +1,10 @@
 import User from "./User";
 
-const UserListView = (props) => {
+const UserListView = ({userList}) => {
   return (
     <div>
       <ul>
-        {props.userList.map(user => <User user={user} />)}
+        {userList.map(user => <User user={user} />)}
       </ul>
     </div>
   )
