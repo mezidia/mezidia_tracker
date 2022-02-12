@@ -1,6 +1,6 @@
 import React from "react";
 
-const ChatMessage = ({message, id}) => {
+const ChatMessage = ({message, id, deleteFunc}) => {
   const date = new Date();
   const user_timezone = date.getTimezoneOffset() / 60 * (-1);
 
@@ -14,6 +14,7 @@ const ChatMessage = ({message, id}) => {
   return (<>
       <div style={{'text-align': messageClass}}>
         <p>{content}<sub>{time}</sub></p>
+        <button onClick={() => deleteFunc(id)}>X</button>
       </div>
     </>
   )

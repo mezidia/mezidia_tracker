@@ -15,9 +15,9 @@ const ChatRoom = () => {
   const utc_time = `${hours}:${minutes}`;
 
   const [messages, setMessages] = useState([{}]),
-        [isLoaded, setIsLoaded] = useState(false),
-        [error, setError] = useState(null),
-        [formValue, setFormValue] = useState('');
+    [isLoaded, setIsLoaded] = useState(false),
+    [error, setError] = useState(null),
+    [formValue, setFormValue] = useState('');
 
   const getMessages = async () => {
     const response = await fetch(`${config.BASE_URL}/chat/mezidia-tracker`);
@@ -26,6 +26,17 @@ const ChatRoom = () => {
     if (!response.ok) setError(error);
     else setMessages(data['messages']);
     setIsLoaded(true);
+  }
+
+  const deleteMessage = async (id) => {
+    const headers = {
+      method: 'DELETE'
+    }
+    const new_messages = [...messages];
+    new_messages.splice(id, 1);
+    setMessages(new_messages)
+    const response = await fetch(`${config.BASE_URL}/chat/mezidia-tracker/${id}`, headers);
+    if (!response.ok) console.error(error);
   }
 
   useEffect(() => {
@@ -57,7 +68,13 @@ const ChatRoom = () => {
 
   return (<>
     <main>
-      {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} id={messages.indexOf(msg)}/> )}
+      {messages && messages.map(msg => <ChatMessage
+          key={msg.id}
+          message={msg}
+          id={messages.indexOf(msg)}
+          deleteFunc={deleteMessage}
+        />
+      )}
     </main>
 
     <form onSubmit={sendMessage}>
