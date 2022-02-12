@@ -8,10 +8,6 @@ const ChatRoom = () => {
 
   const addZeroToDate = date => (date < 10 ? '0' + date : date);
 
-  const determineTime = (time, timezone) => {
-    if (time) return ((+time.substr(0, 2) + timezone) + time.substr(2)).toString();
-  }
-
   const date = new Date();
   const currentTimeZoneOffsetInHours = date.getTimezoneOffset() / 60;
   const hours = addZeroToDate(date.getHours() + currentTimeZoneOffsetInHours);
@@ -61,7 +57,7 @@ const ChatRoom = () => {
 
   return (<>
     <main>
-      {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} dateFunc={determineTime}/>)}
+      {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} id={messages.indexOf(msg)}/> )}
     </main>
 
     <form onSubmit={sendMessage}>

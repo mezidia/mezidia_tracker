@@ -13,7 +13,6 @@ function App() {
   const [userList, setUserList] = useState([{}]),
         [isLoaded, setIsLoaded] = useState(false),
         [error, setError] = useState(null);
-
   const getUsers = async () => {
     const response = await fetch(`${config.BASE_URL}/users`);
     const data = await response.json();
