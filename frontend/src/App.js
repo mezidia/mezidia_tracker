@@ -5,31 +5,25 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import UserListView from "./components/UserListView";
 import RegisterForm from "./components/Forms/RegisterForm";
 import Config from "./config";
+import ChatRoom from "./components/Chat";
 
 function App() {
   const config = new Config();
 
-  const [userList, setUserList] = useState([{}]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState(null);
+  const [userList, setUserList] = useState([{}]),
+        [isLoaded, setIsLoaded] = useState(false),
+        [error, setError] = useState(null);
+  const getUsers = async () => {
+    const response = await fetch(`${config.BASE_URL}/users`);
+    const data = await response.json();
+
+    if (!response.ok) setError(error);
+    else setUserList(data);
+    setIsLoaded(true);
+  }
 
   useEffect(() => {
-    fetch(`${config.BASE_URL}/users`)
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        }
-        throw response;
-      })
-      .then(users => {
-          setIsLoaded(true);
-          setUserList(users);
-        },
-        (error => {
-          setIsLoaded(true);
-          console.error('Error while fetching data: ', error);
-          setError(error);
-        }))
+    getUsers();
   }, [])
 
   if (error) return <div>Error: {error.message}</div>;
@@ -39,6 +33,8 @@ function App() {
     <div>
       <UserListView userList={userList}/>
       <RegisterForm/>
+      <hr/>
+      <ChatRoom/>
     </div>
   )
 }

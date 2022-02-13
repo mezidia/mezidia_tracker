@@ -30,10 +30,12 @@ const Form = () => {
     setSubmitted(false);
   };
 
+  const isEmpty = (element) => element === '';
+
   // Handling the form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (name === '' || email === '' || password === '') {
+    if ([name, email, password].some(isEmpty)) {
       setError(true);
     } else {
       setSubmitted(true);

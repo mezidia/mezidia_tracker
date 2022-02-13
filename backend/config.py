@@ -1,3 +1,3 @@
 import os
 
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'password')
+DB_PASSWORD = os.getenv('DB_PASSWORD', '')

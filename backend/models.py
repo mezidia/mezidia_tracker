@@ -1,8 +1,8 @@
 from datetime import datetime
+from typing import Optional, List
+from bson import ObjectId
 
 from pydantic import BaseModel, Field, EmailStr, HttpUrl
-from bson import ObjectId
-from typing import Optional, List
 
 
 class PyObjectId(ObjectId):
@@ -86,6 +86,7 @@ class ProjectModel(BaseModel):
     bitbucket_url: Optional[HttpUrl]
     members: List[str] = Field(...)
     tasks: List[str] = Field(...)
+    chat: str = Field(...)
 
     class Config:
         allow_population_by_field_name = True
@@ -122,3 +123,19 @@ class TaskModel(BaseModel):
 
 class UpdateTaskModel(BaseModel):
     pass
+
+
+class ChatModel(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    chat_name: str = Field(...)
+    messages: List[dict] = Field(...)
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "chat_name": "1",
+                'messages': [],
+            }
+        }
