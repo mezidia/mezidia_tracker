@@ -2,13 +2,10 @@ import uvicorn
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import users
+from routers import users, chat
 
 app = FastAPI()
-origins = [
-    "http://localhost",
-    "http://localhost:3000"
-]
+origins = ["http://localhost", "http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,6 +22,7 @@ async def start_page():
 
 
 app.include_router(users.router)
+app.include_router(chat.router)
 
 if __name__ == '__main__':
-    uvicorn.run('main:app')
+    uvicorn.run('main:app', reload=True)

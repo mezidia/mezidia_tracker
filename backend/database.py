@@ -2,6 +2,7 @@ from fastapi import status, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+
 import motor.motor_asyncio
 
 
@@ -15,7 +16,8 @@ class Client:
         """
         cluster = motor.motor_asyncio.AsyncIOMotorClient(
             f'mongodb+srv://mezidia:{password}@mezidiatracker.'
-            f'sqnpg.mongodb.net/mezidia_tracker?retryWrites=true&w=majority')
+            f'sqnpg.mongodb.net/mezidia_tracker?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE'
+        )
         db = cluster[db_name]
         self.collection = db[collection_name]
 
@@ -39,13 +41,19 @@ class Client:
         raise HTTPException(status_code=404, detail='Object has not found')
 
     async def update_object(self, query: dict, requested_object: BaseModel) -> dict:
-        requested_object = {k: v for k, v in requested_object.dict().items() if v is not None}
+        requested_object = {
+            k: v for k, v in requested_object.dict().items() if v is not None
+        }
 
         if len(requested_object) >= 1:
-            update_result = await self.collection.update_one(query, {'$set': requested_object})
+            update_result = await self.collection.update_one(
+                query, {'$set': requested_object}
+            )
 
             if update_result.modified_count == 1:
-                if (updated_object := await self.collection.find_one(query)) is not None:
+                if (
+                    updated_object := await self.collection.find_one(query)
+                ) is not None:
                     return updated_object
 
         if (existing_object := await self.collection.find_one(query)) is not None:

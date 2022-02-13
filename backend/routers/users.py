@@ -6,16 +6,16 @@ from hashing import Hash
 from config import DB_PASSWORD
 
 from typing import List, Optional
-import os
 
-router = APIRouter(
-    prefix='/user',
-    tags=['Users']
+router = APIRouter(prefix='/user', tags=['Users'])
+
+
+@router.post(
+    '',
+    response_description='Add new user',
+    response_model=UserModel,
+    status_code=status.HTTP_201_CREATED,
 )
-
-
-@router.post('', response_description='Add new user', response_model=UserModel,
-             status_code=status.HTTP_201_CREATED)
 async def create_user(player: UserModel = Body(...)):
     """
     Create a user:
@@ -33,8 +33,12 @@ async def create_user(player: UserModel = Body(...)):
     return result
 
 
-@router.get('s', response_description='List all users', response_model=List[UserModel],
-            status_code=status.HTTP_200_OK)
+@router.get(
+    's',
+    response_description='List all users',
+    response_model=List[UserModel],
+    status_code=status.HTTP_200_OK,
+)
 async def list_users():
     """
     Get all users
@@ -44,8 +48,12 @@ async def list_users():
     return users
 
 
-@router.get('', response_description='Get a single user', response_model=UserModel,
-            status_code=status.HTTP_200_OK)
+@router.get(
+    '',
+    response_description='Get a single user',
+    response_model=UserModel,
+    status_code=status.HTTP_200_OK,
+)
 async def show_user(identifier: Optional[str] = None, email: Optional[str] = None):
     """
     Get a user by email:
@@ -60,10 +68,17 @@ async def show_user(identifier: Optional[str] = None, email: Optional[str] = Non
     raise HTTPException(status_code=404, detail='Set some parameters')
 
 
-@router.put('', response_description='Update a user', response_model=UpdateUserModel,
-            status_code=status.HTTP_200_OK)
-async def update_user(identifier: Optional[str] = None, email: Optional[str] = None,
-                      city: UpdateUserModel = Body(...)):
+@router.put(
+    '',
+    response_description='Update a user',
+    response_model=UpdateUserModel,
+    status_code=status.HTTP_200_OK,
+)
+async def update_user(
+    identifier: Optional[str] = None,
+    email: Optional[str] = None,
+    city: UpdateUserModel = Body(...),
+):
     """
     Update a user by email:
     - **email**: user's email
@@ -77,8 +92,9 @@ async def update_user(identifier: Optional[str] = None, email: Optional[str] = N
     raise HTTPException(status_code=404, detail='Set some parameters')
 
 
-@router.delete('', response_description='Delete a user',
-               status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    '', response_description='Delete a user', status_code=status.HTTP_204_NO_CONTENT
+)
 async def delete_user(identifier: Optional[str] = None, email: Optional[str] = None):
     """
     Delete a user by email:
